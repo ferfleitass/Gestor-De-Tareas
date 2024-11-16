@@ -89,10 +89,17 @@ export default {
     }
 
     const fetchTasksFromAPI = async () => {
-      const response = await fetch('https://dummyjson.com/todos')
-      const data = await response.json()
-      tasksFromAPI.value = data.todos
-    }
+  try {
+    const response = await fetch('https://dummyjson.com/todos');
+    const data = await response.json();
+    console.log('Datos obtenidos:', data); // Esto debería mostrar las tareas en la consola
+    tasksFromAPI.value = data.todos.slice(0, 10); // Solo las primeras 10 tareas
+  } catch (error) {
+    console.error('Error al cargar tareas:', error);
+    alert('Hubo un problema al cargar las tareas.');
+  }
+};
+
 
     return { tasksFromAPI, selectedView, addTask, fetchTasksFromAPI }
   }

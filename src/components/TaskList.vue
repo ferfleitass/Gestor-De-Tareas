@@ -1,40 +1,32 @@
 <template>
-    <ul class="list-group">
-      <li v-for="task in tasks" :key="task.id" class="list-group-item d-flex justify-content-between align-items-center">
-        <span :class="{'text-decoration-line-through': task.completed}">{{ task.task }}</span>
-        <button @click="toggleComplete(task)" class="btn btn-sm btn-success">Marcar como completada</button>
+  <div class="fetch-tasks p-3">
+    <h3>Extraer Tareas</h3>
+    <button class="btn btn-success" @click="fetchTasks">Obtener Tareas</button>
+    <ul class="list-group mt-3">
+      <li class="list-group-item" v-for="task in tasks" :key="task.id">
+        {{ task.title }}
       </li>
     </ul>
-  </template>
-  
-  <script>
-  export default {
-    name: 'TaskList',
-    props: {
-      tasks: Array
-    },
-    methods: {
-      toggleComplete(task) {
-        task.completed = !task.completed
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      tasks: [],
+    };
+  },
+  methods: {
+    async fetchTasks() {
+      try {
+        const response = await fetch('https://dummyjson.com/todos');
+        const data = await response.json();
+        this.tasks = data.todos.slice(0, 10); // Limitar a 10 tareas
+      } catch (error) {
+        console.error('Error al obtener tareas:', error);
       }
-    }
-  }
-  </script>
-  
-  <style scoped>
-  /* Estilos adicionales para una mejor presentación */
-  .list-group-item {
-    margin-bottom: 0.5rem;
-    background-color: #f8f9fa;
-    border-radius: 8px;
-  }
-  
-  button {
-    transition: background-color 0.3s ease;
-  }
-  
-  button:hover {
-    background-color: #218838;
-  }
-  </style>
-  
+    },
+  },
+};
+</script>
